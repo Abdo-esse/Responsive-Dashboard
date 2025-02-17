@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation dynamique</title>
+</head>
+<body>
+
+<nav>
+    <a href="page1.html" class="nav-link">Page 1</a>
+    <a href="page2.html" class="nav-link">Page 2</a>
+</nav>
+
+<div id="content">
+    <h2>Bienvenue</h2>
+    <p>Cliquez sur un lien pour charger une page sans rechargement.</p>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const links = document.querySelectorAll(".nav-link");
+    const contentDiv = document.getElementById("content");
+
+    links.forEach(link => {
+    link.addEventListener("click", function (event) {
+    event.preventDefault(); // Empêcher le rechargement
+
+    const url = this.getAttribute("href");
+
+    fetch(url) // Charger le contenu de la nouvelle page
+    .then(response => response.text())
+    .then(data => {
+    contentDiv.innerHTML = data; // Mettre à jour le contenu
+    history.pushState(null, "", url); // Modifier l'URL sans recharger
+})
+    .catch(error => console.error("Erreur:", error));
+});
+});
+
+    window.addEventListener("popstate", function () {
+    location.reload(); // Gérer le bouton "Retour" du navigateur
+});
+});
+</script>
+
+</body>
+</html>
